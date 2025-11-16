@@ -7,7 +7,6 @@ From: nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
 %environment
     export HF_HOME="/work/nvme/bfgx/zzhang32/hf_cache/"
     export HF_DATASETS_CACHE="/work/nvme/bfgx/zzhang32/hf_cache/"
-    export HF_TOKEN="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"
 
     export PYTORCH_CUDA_ALLOC_CONF='max_split_size_mb:1024'
 
