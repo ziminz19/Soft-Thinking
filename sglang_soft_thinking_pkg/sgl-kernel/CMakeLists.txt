@@ -39,7 +39,7 @@ clear_cuda_arches(CMAKE_FLAG)
 
 include(FetchContent)
 
-# cutlass
+# cutlass (original: 5e497243f7ad13a2aa842143f9b10bbb23d98292)
 FetchContent_Declare(
     repo-cutlass
     GIT_REPOSITORY https://github.com/NVIDIA/cutlass
@@ -63,11 +63,11 @@ FetchContent_Declare(
     GIT_SHALLOW    OFF
 )
 FetchContent_Populate(repo-flashinfer)
-# flash-attention
+# flash-attention (original: sgl-kernel)
 FetchContent_Declare(
     repo-flash-attention
     GIT_REPOSITORY https://github.com/sgl-project/sgl-attn
-    GIT_TAG        sgl-kernel
+    GIT_TAG        bf1e4ce51fc85370b9489976e8ccbe72eb71fefe
     GIT_SHALLOW    OFF
 )
 FetchContent_Populate(repo-flash-attention)
@@ -145,6 +145,8 @@ if ("${CUDA_VERSION}" VERSION_GREATER_EQUAL "12.4" OR SGL_KERNEL_ENABLE_SM90A)
         "-gencode=arch=compute_90a,code=sm_90a"
     )
 endif()
+
+# set(SGL_KERNEL_ENABLE_FA3 OFF)
 
 if (SGL_KERNEL_ENABLE_BF16)
     list(APPEND SGL_KERNEL_CUDA_FLAGS

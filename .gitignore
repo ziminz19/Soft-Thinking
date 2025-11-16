@@ -369,3 +369,65 @@ tests/e2e/toy_examples/deepspeed/synchronous/output.txt
 logs
 log
 outputs
+
+
+### migrated from triton
+
+# Exception: allow lib/ and lib64/ inside triton (they are ignored globally)
+!triton/lib/
+!triton/lib64/
+
+# Triton builds
+triton/build/
+triton/build-*/
+
+# Triton Python module builds
+triton/python/build/
+triton/python/dist/
+triton/python/triton*.egg-info/
+
+triton/python/triton/_C/*.pyd
+triton/python/triton/_C/*.so
+triton/python/triton/_C/*.dylib
+
+# Backends copied from submodules
+triton/python/triton/backends/
+!triton/python/triton/backends/__init__.py
+!triton/python/triton/backends/compiler.py
+!triton/python/triton/backends/driver.py
+
+# Proton
+triton/python/triton/profiler
+
+# Python caches (triton-specific)
+triton/__pycache__/
+triton/**/__pycache__/
+triton/.pytest_cache
+
+# JetBrains project files (triton-specific)
+triton/.idea
+triton/cmake-build-*
+
+# Third-party binaries (triton-specific)
+triton/cuobjdump
+triton/nvdisasm
+triton/ptxas
+
+# Third-party include
+triton/third_party/nvidia/backend/include
+
+# Docs
+triton/docs/_build/
+triton/docs/python-api/generated/
+triton/docs/dialects/
+triton/docs/getting-started/tutorials
+triton/docs/sg_execution_times.rst
+!triton/python/tutorials/*.py
+!triton/python/tutorials/*.rst
+
+# clangd index (triton-specific)
+triton/.clangd/
+triton/compile_commands.json
+
+# apptainer sid
+apptainer_sif/

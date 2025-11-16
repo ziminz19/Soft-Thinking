@@ -10,7 +10,7 @@ check-deps: ## Check and install required Python formatting dependencies
 	@command -v black >/dev/null 2>&1 || (echo "Installing black..." && pip install black)
 
 install-deps: ## Install Python formatting tools (isort and black)
-	pip install scikit-build-core isort black
+	uv pip install scikit-build-core isort black
 
 tree: ## Show project directory structure
 	@tree --prune -I "__pycache__|*.egg-info|*.so|build|3rdparty|dist"
@@ -26,7 +26,12 @@ install: submodule ## Install package in development mode
 	@pip install -e . --no-build-isolation
 
 build: install-deps submodule ## Build and install wheel package
-	@rm -rf dist/* || true && export MAX_JOBS=$(nproc) && uv build --wheel -Cbuild-dir=build . --verbose --color=always --no-build-isolation && pip3 install dist/*whl --force-reinstall --no-deps
+	@rm -rf dist/* || true && \
+	export MAX_JOBS=4 && \
+	export CMAKE_BUILD_PARALLEL_LEVEL=4 && \
+	export CMAKE_CUDA_FLAGS="--threads=8" && \
+	uv build --wheel -Cbuild-dir=build . --verbose --color=always --no-build-isolation && \
+	uv pip install dist/*whl --force-reinstall --no-deps
 
 clean: ## Remove build artifacts
 	@rm -rf build dist *.egg-info

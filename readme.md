@@ -56,6 +56,56 @@ soft_thinking/
 └── ... (other files)
 ``` -->
 
+## For DeltaAI
+
+### Create apptainer sif file, modified from Soft-Thinking's docker image
+```bash
+# create sif file
+cd apptainer_scripts
+./apptainer_build.sh
+cd ..
+```
+
+### Run container
+```bash
+./apptainer.sh
+```
+
+### create environment with uv and install required packages
+```bash
+# create uv venv
+uv venv st_env --python 3.11.13
+source st_env/bin/activate
+
+# install torch-related packages
+uv pip install "torch==2.6.0" "torchvision==0.21.0" --torch-backend=auto
+
+# install triton from source (triton version of the cloned repo is 3.0.0, while original requirement is 3.2.0)
+cd triton
+uv pip install -e python --no-build-isolation
+python setup.py install # prevent missing @triton.jit
+
+# install required packages
+uv pip install "flashinfer-python==0.2.3" --torch-backend=auto
+uv pip install flash_attn==2.8.2 --no-build-isolation # (might not be this simple, if encounter problem, search for it)
+uv pip install -r requirements.st.txt --torch-backend=auto
+```
+
+### build sgl-kernel from source
+Changes I made:
+1. modified sglang's custom flash-attn git tag dependency to a commit that is compatible with the cutlass version declared in `CMakeLists.txt` (still exploring)
+2. modified Makefile for adjusting compilation parallelism (MAX_JOBS, CMAKE_BUILD_PARALLEL_LEVEL, CMAKE_CUDA_FLAGS)
+```bash
+cd sgl-kernel
+make build
+```
+
+### install this custom sglang
+```bash
+cd sglang_soft_thinking_pkg
+uv pip install -e "python"
+```
+
 ## ⚙️ Environment Setup
 
 To set up the virtual environment for SGLang Soft Thinking inference, execute each line in `configure.sh`:

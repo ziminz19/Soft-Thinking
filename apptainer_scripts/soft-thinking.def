@@ -1,0 +1,62 @@
+Bootstrap: docker
+From: nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
+
+%arguments
+    DEBIAN_FRONTEND=noninteractive
+
+%environment
+    export HF_HOME="/work/nvme/bfgx/zzhang32/hf_cache/"
+    export HF_DATASETS_CACHE="/work/nvme/bfgx/zzhang32/hf_cache/"
+    export HF_TOKEN="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"
+
+    export PYTORCH_CUDA_ALLOC_CONF='max_split_size_mb:1024'
+
+    export PATH="/root/.local/bin:${PATH}"
+    export UV_CACHE_DIR="/work/nvme/bfgx/zzhang32/uv_cache"
+
+    export CUDA_HOME=/usr/local/cuda
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+
+    mkdir /workspace
+    
+    # System dependencies required by your pip packages
+    apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        wget \
+        git \
+        git-lfs \
+        build-essential \
+        pkg-config \
+        cmake \
+        ninja-build \
+        ffmpeg \
+        libsndfile1 \
+        libgl1 \
+        libglib2.0-0 \
+        zlib1g-dev \
+        openssh-server \
+        && rm -rf /var/lib/apt/lists/*
+
+    # install uv
+    curl -LsSf https://astral.sh/uv/install.sh -o /tmp/uv_installer.sh \
+        && sh /tmp/uv_installer.sh \
+        && rm -f /tmp/uv_installer.sh
+
+    export PATH="/root/.local/bin:${PATH}"
+
+    if command -v uv &> /dev/null; then
+        # If available, echo its version
+        echo "uv is installed. Version:"
+        uv --version
+    else
+        # If not available, print an error message and exit with a non-zero status
+        echo "Error: uv not installed properly or not found in PATH." >&2
+        exit 1
+    fi
+
+%runscript
+    cd /work/nvme/bfgx/zzhang32/Soft-Thinking
+

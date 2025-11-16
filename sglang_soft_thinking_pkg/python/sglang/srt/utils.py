@@ -66,9 +66,6 @@ from torch.profiler import ProfilerActivity, profile, record_function
 from torch.utils._contextlib import _DecoratorContextManager
 from triton.runtime.cache import (
     FileCacheManager,
-    default_cache_dir,
-    default_dump_dir,
-    default_override_dir,
 )
 
 logger = logging.getLogger(__name__)
@@ -79,6 +76,17 @@ time_infos = {}
 HIP_FP8_E4M3_FNUZ_MAX = 224.0
 
 _warned_bool_env_var_keys = set()
+
+def default_cache_dir():
+    return os.path.join(Path.home(), ".triton", "cache")
+
+
+def default_override_dir():
+    return os.path.join(Path.home(), ".triton", "override")
+
+
+def default_dump_dir():
+    return os.path.join(Path.home(), ".triton", "dump")
 
 
 def get_bool_env_var(name: str, default: str = "false") -> bool:
